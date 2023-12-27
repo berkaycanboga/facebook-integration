@@ -1,0 +1,126 @@
+// -- campaign, adset, ad example update batch --
+// -- same method for individual create/update for each, excluding ids for create --
+{
+    "campaigns": [
+        {
+            "campaign_id": "120204179895500048",
+            "name": "Updated Campaign Name trying 1",
+            "status": "PAUSED",
+            "buying_type": "AUCTION",
+            "objective": "CONVERSIONS",
+            "special_ad_categories": "\"NONE\"",
+            "start_time": "2023-12-01T00:00:00.000Z",
+            "end_time": "2023-12-31T23:59:59.999Z",
+            "daily_budget": 6000,
+            "target": {
+                "age_max": 40,
+                "age_min": 20,
+                "genders": [
+                    "1"
+                ],
+                "geo_locations": {
+                    "countries": [
+                        "US"
+                    ]
+                }
+            },
+            "campaign_type": "LINK_CLICKS"
+        },
+        {
+            "campaign_id": "120204179895480048",
+            "name": "Updated Campaign Name trying 2",
+            "status": "PAUSED",
+            "buying_type": "AUCTION",
+            "objective": "CONVERSIONS",
+            "special_ad_categories": "\"NONE\"",
+            "start_time": "2023-12-01T00:00:00.000Z",
+            "end_time": "2023-12-31T23:59:59.999Z",
+            "daily_budget": 6000,
+            "target": {
+                "age_max": 40,
+                "age_min": 20,
+                "genders": [
+                    "1"
+                ],
+                "geo_locations": {
+                    "countries": [
+                        "US"
+                    ]
+                }
+            },
+            "campaign_type": "LINK_CLICKS"
+        }
+    ],
+    "adsets": [
+        {
+            "adset_id": "120204179895720048",
+            "name": "Updated Ad Set Name again 1",
+            "status": "PAUSED",
+            "targeting": {
+                "age_max": 50,
+                "age_min": 30,
+                "genders": [
+                    "2"
+                ],
+                "geo_locations": {
+                    "countries": [
+                        "CA"
+                    ]
+                }
+            },
+            "billing_event": "IMPRESSIONS",
+            "bid_amount": 700
+        },
+        {
+            "adset_id": "120204179895640048",
+            "name": "Updated Ad Set Name again 2",
+            "status": "PAUSED",
+            "targeting": {
+                "age_max": 50,
+                "age_min": 30,
+                "genders": [
+                    "2"
+                ],
+                "geo_locations": {
+                    "countries": [
+                        "CA"
+                    ]
+                }
+            },
+            "billing_event": "IMPRESSIONS",
+            "bid_amount": 700
+        }
+    ],
+    "ads": [
+        {
+            "ad_id": "120204179895880048",
+            "name": "Updated Ad Name again 1",
+            "status": "PAUSED",
+            "creative": {
+                "name": "Updated Creative",
+                "object_story_spec": {
+                    "page_id": "178618758673774",
+                    "link_data": {
+                        "link": "https://www.facebook.com/profile.php?id=61554700925854",
+                        "message": "Updated test ad. Customize the message for testing purposes."
+                    }
+                }
+            }
+        },
+        {
+            "ad_id": "120204179896060048",
+            "name": "Updated Ad Name again 2",
+            "status": "PAUSED",
+            "creative": {
+                "name": "Updated Creative",
+                "object_story_spec": {
+                    "page_id": "178618758673774",
+                    "link_data": {
+                        "link": "https://www.facebook.com/profile.php?id=61554700925854",
+                        "message": "Updated test ad. Customize the message for testing purposes."
+                    }
+                }
+            }
+        }
+    ]
+}

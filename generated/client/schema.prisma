@@ -1,0 +1,51 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Campaign {
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  status                String
+  buying_type           String
+  objective             String
+  special_ad_categories String
+  start_time            DateTime
+  end_time              DateTime
+  daily_budget          Float
+  target                Json
+  campaign_type         String
+  creation_date         DateTime @default(now())
+  campaign_id           String   @unique
+  adSets                AdSet[]  @relation("CampaignToAdSet")
+}
+
+model AdSet {
+  id            Int      @id @default(autoincrement())
+  name          String
+  status        String
+  targeting     Json
+  billing_event String
+  bid_amount    Float
+  adset_id      String   @unique
+  campaign      Campaign @relation("CampaignToAdSet", fields: [campaignId], references: [id], onDelete: Cascade)
+  campaign_id   String
+  campaignId    Int
+  ads           Ad[]     @relation("AdSetToAd")
+}
+
+model Ad {
+  id       Int    @id @default(autoincrement())
+  name     String
+  status   String
+  adset_id String
+  ad_id    String @unique
+  adSet    AdSet  @relation("AdSetToAd", fields: [adSetId], references: [id], onDelete: Cascade)
+  adSetId  Int
+  creative Json
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
