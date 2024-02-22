@@ -1,14 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
-import { createCampaign } from '../services/campaignService';
-import { CampaignParams } from '../interfaces/interfaces';
-import { getCampaign } from '../services/campaignService';
-import prisma from '../lib/db';
+import { Request, Response, NextFunction } from "express";
 import {
   AdAccount,
   Campaign,
   FacebookAdsApi,
-} from 'facebook-nodejs-business-sdk';
-import { accessToken, accountId } from '../facebookAdsConnection';
+} from "facebook-nodejs-business-sdk";
+
+import { CampaignParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+import { createCampaign, getCampaign } from "../services/campaignService";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -21,7 +23,7 @@ export const createCampaignController = async (
     const { campaigns } = req.body;
 
     if (!campaigns || !Array.isArray(campaigns)) {
-      throw new Error('Invalid or missing campaigns array');
+      throw new Error("Invalid or missing campaigns array");
     }
 
     const newCampaigns = await Promise.all(
@@ -29,14 +31,14 @@ export const createCampaignController = async (
     );
 
     res.json({
-      message: 'Campaigns created successfully',
+      message: "Campaigns created successfully",
       data: newCampaigns,
     });
   } catch (error) {
-    console.error('Error creating campaigns:', error);
+    console.error("Error creating campaigns:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);
@@ -66,7 +68,7 @@ export const getCampaignController = async (
       res.json({ dbCampaign, fbCampaign });
     }
   } catch (error) {
-    console.error('Error fetching campaign data:', error);
+    console.error("Error fetching campaign data:", error);
     next(error);
   }
 };
@@ -81,7 +83,7 @@ export const updateCampaignController = async (
     const { campaigns } = req.body;
 
     if (!campaigns || !Array.isArray(campaigns)) {
-      throw new Error('Invalid or missing fields for update');
+      throw new Error("Invalid or missing fields for update");
     }
 
     const updatedCampaigns = [];
@@ -89,10 +91,10 @@ export const updateCampaignController = async (
     for (const campaign of campaigns) {
       const account = new AdAccount(accountId, FacebookAdsApiInstance);
       await account.get([AdAccount.Fields.name], {
-        fields: ['name'],
+        fields: ["name"],
       });
 
-      console.log('Updating Campaign...');
+      console.log("Updating Campaign...");
       const campaignObj = new Campaign(campaign.campaign_id);
       await campaignObj.update([Campaign.Fields.name], {
         [Campaign.Fields.name]: campaign.name,
@@ -113,12 +115,12 @@ export const updateCampaignController = async (
       return { dbCampaigns: updatedCampaigns, fbCampaigns: updatedCampaigns };
     } else {
       res.json({
-        message: 'Campaigns updated successfully',
+        message: "Campaigns updated successfully",
         data: updatedCampaigns,
       });
     }
   } catch (error) {
-    console.error('Error updating campaigns:', error);
+    console.error("Error updating campaigns:", error);
     next(error);
   }
 };

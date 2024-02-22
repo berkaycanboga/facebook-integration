@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
-import { createAdSet } from '../services/adSetService';
-import { AdSetParams } from '../interfaces/interfaces';
-import { getAdSet } from '../services/adSetService';
-import prisma from '../lib/db';
-import { AdAccount, AdSet, FacebookAdsApi } from 'facebook-nodejs-business-sdk';
-import { accessToken, accountId } from '../facebookAdsConnection';
+import { Request, Response, NextFunction } from "express";
+import { AdAccount, AdSet, FacebookAdsApi } from "facebook-nodejs-business-sdk";
+
+import { AdSetParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+import { createAdSet } from "../services/adSetService";
+import { getAdSet } from "../services/adSetService";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -17,7 +20,7 @@ export const createAdSetController = async (
     const { adsets } = req.body;
 
     if (!adsets || !Array.isArray(adsets)) {
-      throw new Error('Invalid or missing adsets array');
+      throw new Error("Invalid or missing adsets array");
     }
 
     const newAdSets = await Promise.all(
@@ -32,14 +35,14 @@ export const createAdSetController = async (
     );
 
     res.json({
-      message: 'AdSets created successfully',
+      message: "AdSets created successfully",
       data: newAdSets,
     });
   } catch (error) {
-    console.error('Error creating AdSets:', error);
+    console.error("Error creating AdSets:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);
@@ -69,7 +72,7 @@ export const getAdSetController = async (
       res.json({ dbAdSet, fbAdSet });
     }
   } catch (error) {
-    console.error('Error fetching ad set data:', error);
+    console.error("Error fetching ad set data:", error);
     next(error);
   }
 };
@@ -84,7 +87,7 @@ export const updateAdSetController = async (
     const { adsets } = req.body;
 
     if (!adsets || !Array.isArray(adsets)) {
-      throw new Error('Invalid or missing fields for update');
+      throw new Error("Invalid or missing fields for update");
     }
 
     const updatedAdSets = [];
@@ -92,10 +95,10 @@ export const updateAdSetController = async (
     for (const adset of adsets) {
       const account = new AdAccount(accountId, FacebookAdsApiInstance);
       await account.get([AdAccount.Fields.name], {
-        fields: ['name'],
+        fields: ["name"],
       });
 
-      console.log('Updating AdSet...');
+      console.log("Updating AdSet...");
       const adSet = new AdSet(adset.adset_id);
       await adSet.update([AdSet.Fields.name], {
         [AdSet.Fields.name]: adset.name,
@@ -114,12 +117,12 @@ export const updateAdSetController = async (
       return { dbAdSets: updatedAdSets, fbAdSets: updatedAdSets };
     } else {
       res.json({
-        message: 'AdSets updated successfully',
+        message: "AdSets updated successfully",
         data: updatedAdSets,
       });
     }
   } catch (error) {
-    console.error('Error updating ad sets:', error);
+    console.error("Error updating ad sets:", error);
     next(error);
   }
 };

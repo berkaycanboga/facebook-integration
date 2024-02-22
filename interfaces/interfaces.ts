@@ -1,6 +1,6 @@
-import { Prisma } from '../generated/client';
+import { Prisma } from "../generated/client";
 
-interface CampaignParams {
+export interface CampaignParams {
   name: string;
   status: string;
   buying_type: string;
@@ -13,7 +13,7 @@ interface CampaignParams {
   campaign_type: string;
 }
 
-interface AdSetParams {
+export interface AdSetParams {
   name: string;
   status: string;
   targeting: Prisma.JsonValue[];
@@ -23,12 +23,10 @@ interface AdSetParams {
   campaignId: number;
 }
 
-interface AdParams {
+export interface AdParams {
   name: string;
   status: string;
   creative: Prisma.JsonValue[];
   adset_id: string;
   adSetId: number;
 }
-
-export { CampaignParams, AdSetParams, AdParams };

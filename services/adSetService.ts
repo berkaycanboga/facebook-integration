@@ -1,7 +1,10 @@
-import prisma from '../lib/db';
-import { FacebookAdsApi, AdAccount } from 'facebook-nodejs-business-sdk';
-import { AdSetParams } from '../interfaces/interfaces';
-import { accessToken, accountId } from '../facebookAdsConnection';
+import { FacebookAdsApi, AdAccount } from "facebook-nodejs-business-sdk";
+
+import { AdSetParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -49,7 +52,7 @@ export const getAdSet = async (adset_ids: string[]) => {
       adset_ids.map(async (id) => {
         try {
           return await account.get([AdAccount.Fields.name], {
-            fields: ['name'],
+            fields: ["name"],
             params: { adset_ids: [id] },
           });
         } catch (error) {
@@ -64,7 +67,7 @@ export const getAdSet = async (adset_ids: string[]) => {
 
     return fbAdSets.filter((result) => result !== null);
   } catch (error) {
-    console.error('Error fetching ad set data:', error);
+    console.error("Error fetching ad set data:", error);
     return [];
   }
 };

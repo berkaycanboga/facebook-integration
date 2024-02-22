@@ -1,7 +1,8 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import v1Router from './routes/v1/index';
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+
+import v1Router from "./routes/v1/index";
 
 const app = express();
 const PORT = process.env.PORT || 3000;

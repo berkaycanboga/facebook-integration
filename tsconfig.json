@@ -1,15 +1,26 @@
 {
   "compilerOptions": {
     "target": "ES2021",
-    "module": "commonjs",
+    "module": "CommonJS",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "jsx": "preserve",
+    "allowJs": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".next"]
 }

@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
-import { createAd } from '../services/adService';
-import { AdParams } from '../interfaces/interfaces';
-import { getAd } from '../services/adService';
-import prisma from '../lib/db';
-import { Ad, AdAccount, FacebookAdsApi } from 'facebook-nodejs-business-sdk';
-import { accessToken, accountId } from '../facebookAdsConnection';
+import { Request, Response, NextFunction } from "express";
+import { Ad, AdAccount, FacebookAdsApi } from "facebook-nodejs-business-sdk";
+
+import { AdParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+import { createAd } from "../services/adService";
+import { getAd } from "../services/adService";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -17,7 +20,7 @@ export const createAdController = async (
     const { ads, facebookAdSetId, existingAdSetId } = req.body;
 
     if (!ads || !Array.isArray(ads)) {
-      throw new Error('Invalid or missing ads array');
+      throw new Error("Invalid or missing ads array");
     }
 
     const newAds = await Promise.all(
@@ -27,14 +30,14 @@ export const createAdController = async (
     );
 
     res.json({
-      message: 'Ads created successfully',
+      message: "Ads created successfully",
       data: newAds,
     });
   } catch (error) {
-    console.error('Error creating Ads:', error);
+    console.error("Error creating Ads:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);
@@ -64,7 +67,7 @@ export const getAdController = async (
       res.json({ dbAd, fbAd });
     }
   } catch (error) {
-    console.error('Error fetching ad data:', error);
+    console.error("Error fetching ad data:", error);
     next(error);
   }
 };
@@ -79,7 +82,7 @@ export const updateAdController = async (
     const { ads } = req.body;
 
     if (!ads || !Array.isArray(ads)) {
-      throw new Error('Invalid or missing fields for update');
+      throw new Error("Invalid or missing fields for update");
     }
 
     const updatedAds = [];
@@ -87,10 +90,10 @@ export const updateAdController = async (
     for (const ad of ads) {
       const account = new AdAccount(accountId, FacebookAdsApiInstance);
       await account.get([AdAccount.Fields.name], {
-        fields: ['name'],
+        fields: ["name"],
       });
 
-      console.log('Updating Ad...');
+      console.log("Updating Ad...");
       const adObj = new Ad(ad.ad_id);
       await adObj.update([Ad.Fields.name], {
         [Ad.Fields.name]: ad.name,
@@ -109,12 +112,12 @@ export const updateAdController = async (
       return { dbAds: updatedAds, fbAds: updatedAds };
     } else {
       res.json({
-        message: 'Ads updated successfully',
+        message: "Ads updated successfully",
         data: updatedAds,
       });
     }
   } catch (error) {
-    console.error('Error updating ads:', error);
+    console.error("Error updating ads:", error);
     next(error);
   }
 };

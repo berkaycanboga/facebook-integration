@@ -1,20 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import prisma from '../lib/db';
-import { Campaign, AdSet, Ad } from 'facebook-nodejs-business-sdk';
+import { Request, Response, NextFunction } from "express";
+import { Campaign, AdSet, Ad } from "facebook-nodejs-business-sdk";
+
 import {
   CampaignParams,
   AdSetParams,
   AdParams,
-} from '../interfaces/interfaces';
-import { createCampaign } from '../services/campaignService';
-import { createAdSet } from '../services/adSetService';
-import { createAd } from '../services/adService';
+} from "../interfaces/interfaces";
+import prisma from "../lib/db";
+import { createAd } from "../services/adService";
+import { createAdSet } from "../services/adSetService";
+import { createCampaign } from "../services/campaignService";
+
+import { getAdController, updateAdController } from "./adController";
+import { getAdSetController, updateAdSetController } from "./adSetController";
 import {
   getCampaignController,
   updateCampaignController,
-} from './campaignController';
-import { getAdSetController, updateAdSetController } from './adSetController';
-import { getAdController, updateAdController } from './adController';
+} from "./campaignController";
 
 const createCampaignAdSetAdController = async (
   req: Request,
@@ -25,7 +27,7 @@ const createCampaignAdSetAdController = async (
     const { campaigns, adsets, ads } = req.body;
 
     if (!campaigns || !adsets || !ads) {
-      throw new Error('Invalid or missing fields for creation');
+      throw new Error("Invalid or missing fields for creation");
     }
 
     if (
@@ -33,7 +35,7 @@ const createCampaignAdSetAdController = async (
       !Array.isArray(adsets) ||
       !Array.isArray(ads)
     ) {
-      throw new Error('Invalid data format');
+      throw new Error("Invalid data format");
     }
 
     const createdCampaigns = await Promise.all(
@@ -86,7 +88,7 @@ const createCampaignAdSetAdController = async (
     );
 
     res.json({
-      message: 'Campaigns, AdSets, and Ads created successfully',
+      message: "Campaigns, AdSets, and Ads created successfully",
       data: {
         campaigns: createdCampaigns,
         adSets: createdAdSets,
@@ -94,10 +96,10 @@ const createCampaignAdSetAdController = async (
       },
     });
   } catch (error) {
-    console.error('Error creating Campaigns, AdSets, and Ads:', error);
+    console.error("Error creating Campaigns, AdSets, and Ads:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);
@@ -124,7 +126,7 @@ const getCampaignAdSetAdController = async (
 
     res.json({ Campaigns, Adsets, Ads });
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     next(error);
   }
 };
@@ -138,7 +140,7 @@ const updateCampaignAdAdsetController = async (
     const { campaigns, adsets, ads } = req.body;
 
     if (!campaigns || !adsets || !ads) {
-      throw new Error('Invalid or missing fields for update');
+      throw new Error("Invalid or missing fields for update");
     }
 
     const updatedCampaigns = await updateCampaignController(
@@ -161,7 +163,7 @@ const updateCampaignAdAdsetController = async (
     );
 
     res.json({
-      message: 'Data successfully updated',
+      message: "Data successfully updated",
       data: {
         updatedCampaigns,
         updatedAdSets,
@@ -169,10 +171,10 @@ const updateCampaignAdAdsetController = async (
       },
     });
   } catch (error) {
-    console.error('Error updating data:', error);
+    console.error("Error updating data:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);
@@ -220,13 +222,13 @@ const deleteCampaignAdAdsetController = async (
     }
 
     res.json({
-      message: 'Data successfully deleted',
+      message: "Data successfully deleted",
     });
   } catch (error) {
-    console.error('Error deleting data:', error);
+    console.error("Error deleting data:", error);
 
     if (error instanceof Error) {
-      console.error('Error Message:', error.message);
+      console.error("Error Message:", error.message);
     }
 
     next(error);

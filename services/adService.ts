@@ -1,7 +1,10 @@
-import prisma from '../lib/db';
-import { FacebookAdsApi, AdAccount } from 'facebook-nodejs-business-sdk';
-import { AdParams } from '../interfaces/interfaces';
-import { accessToken, accountId } from '../facebookAdsConnection';
+import { FacebookAdsApi, AdAccount } from "facebook-nodejs-business-sdk";
+
+import { AdParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -36,7 +39,7 @@ export const createAd = async (
 
     return newAdInDB;
   } catch (error) {
-    console.error('Error creating Ad:', error);
+    console.error("Error creating Ad:", error);
     throw error;
   }
 };
@@ -49,7 +52,7 @@ export const getAd = async (ad_ids: string[]) => {
       ad_ids.map(async (id) => {
         try {
           return await account.get([AdAccount.Fields.name], {
-            fields: ['name'],
+            fields: ["name"],
             params: { ad_ids: [id] },
           });
         } catch (error) {
@@ -61,7 +64,7 @@ export const getAd = async (ad_ids: string[]) => {
 
     return fbAds.filter((result) => result !== null);
   } catch (error) {
-    console.error('Error fetching ad data:', error);
+    console.error("Error fetching ad data:", error);
     return [];
   }
 };

@@ -1,7 +1,10 @@
-import prisma from '../lib/db';
-import { FacebookAdsApi, AdAccount } from 'facebook-nodejs-business-sdk';
-import { CampaignParams } from '../interfaces/interfaces';
-import { accessToken, accountId } from '../facebookAdsConnection';
+import { FacebookAdsApi, AdAccount } from "facebook-nodejs-business-sdk";
+
+import { CampaignParams } from "../interfaces/interfaces";
+import prisma from "../lib/db";
+
+const accessToken = process.env.ACCESS_TOKEN || "";
+const accountId = process.env.ACCOUNT_ID || "";
 
 const FacebookAdsApiInstance = FacebookAdsApi.init(accessToken);
 
@@ -10,7 +13,7 @@ export const createCampaign = async (campaign: CampaignParams) => {
   const endDate = new Date(campaign.end_time);
 
   const specialAdCategoriesString = JSON.stringify(
-    campaign.special_ad_categories || '',
+    campaign.special_ad_categories || "",
   );
 
   const account = new AdAccount(accountId, FacebookAdsApiInstance);
@@ -19,7 +22,7 @@ export const createCampaign = async (campaign: CampaignParams) => {
     ...campaign,
     start_time: startDate.toISOString(),
     end_time: endDate.toISOString(),
-    special_ad_categories: JSON.parse(specialAdCategoriesString || '[]'),
+    special_ad_categories: JSON.parse(specialAdCategoriesString || "[]"),
   };
 
   const createdCampaign = await account.createCampaign([], campaignParams);
@@ -47,7 +50,7 @@ export const getCampaign = async (campaign_ids: string[]) => {
       campaign_ids.map(async (id) => {
         try {
           return await account.get([AdAccount.Fields.name], {
-            fields: ['name'],
+            fields: ["name"],
             params: { campaign_ids: [id] },
           });
         } catch (error) {
@@ -62,7 +65,7 @@ export const getCampaign = async (campaign_ids: string[]) => {
 
     return fbCampaigns.filter((result) => result !== null);
   } catch (error) {
-    console.error('Error fetching campaign data:', error);
+    console.error("Error fetching campaign data:", error);
     return [];
   }
 };
